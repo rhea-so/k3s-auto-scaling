@@ -13,7 +13,7 @@ Kubernetes에서 Pods를 Auto Scaling 하는 방법에 대해서 배워봅니다
 ## Documents
 
 1. [Auto Scaling이 필요한 이유](./document/01_AutoScaling이_필요한_이유.md)
-2. [샘플 프로젝트 설명](./document/02_샘플_프로젝트_설명.md)
+2. [Sample Project 설명](./document/02_Sample_Project_설명.md)
 3. [Auto Scaling 해보기](./document/03_AutoScaling_해보기.md)
 
 ## Documentation
