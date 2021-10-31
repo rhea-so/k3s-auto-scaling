@@ -1,8 +1,8 @@
 # Sample Project 설명
 
+![Chatting](../image/04.png)
 
-
-
+정말 단순한 채팅 서비스를 Auto Scaling의 예제로 사용해 볼 것입니다.
 
 ## Configuration & Setup
 
@@ -14,20 +14,24 @@ cd K3sAutoScaling
 npm i
 ```
 
-## Build 
+### Build 
 
 ```sh
 tsc
 ```
 
-## Test
+### Run
 
 ```sh
-npm test
+node dist/index.js --env=local
 ```
 
-### Get Test Coverage
+## Kubernetes Architecture
 
-```sh
-npm run coverage
-```
+![Base](../image/01.png)
+
+![User](../image/03.png)
+
+## Goal
+
+![Goal](../image/02.png)
