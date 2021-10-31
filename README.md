@@ -53,6 +53,8 @@ artillery quick --duration 60 --rate 10 -n 20 http://192.168.0.36:3000/test.html
 TargetNumOfPods = ceil(sum(CurrentPodsCPUUtilization) / Target)
 ```
 
+> [What is Mili CPU?](https://stackoverflow.com/questions/53255956/what-is-the-meaning-of-cpu-and-core-in-kubernetes)
+
 오토스케일링이 이뤄질때의 기준이 되는 자원 사용량은 현재 시점의 데이터만을 사용합니다.  
 그러다 보니 오토스케일링이 이뤄지고 나서 실제로 포드가 늘어나고 있긴 하지만 아직 포드가 실행되고 있는 도중에 다시 오토스케일링을 통해서 포드를 늘리라는 요청이 발생할 수도 있습니다.  
 그래서 일단 한번 오토스케일링이 일어나면 일정시간동안은 추가로 오토스케일링이 일어나지 않게 쿨다운 시간을 둘 수 있습니다.  
