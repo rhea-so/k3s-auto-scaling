@@ -1,0 +1,30 @@
+{
+  "files.exclude": {
+    "**/package-lock.json": true,
+    "**/tsconfig.json": true,
+    "**/dist": true,
+    "**/.vscode": true,
+    "**/node_modules": true,
+    ".npmignore": true,
+    ".gitignore": true,
+    ".dockerignore": true,
+    ".nyc_output": true,
+    ".circleci": true,
+    "coverage": true,
+    ".eslint*": true,
+    "LICENSE": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "**/package-lock.json": true,
+    "**/tsconfig.json": true,
+    "**/dist": true,
+    "**/.vscode": true
+  },
+  "mochaExplorer.files": "dist/99_Test/index.test.js",
+  "mochaExplorer.exit": true,
+  "mochaExplorer.envPath": "",
+  "mochaExplorer.require": ""
+}
