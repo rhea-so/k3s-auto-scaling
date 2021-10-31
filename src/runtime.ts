@@ -1,21 +1,24 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-unused-vars */
 import Express from 'express';
 import SocketIO from 'socket.io';
-import http from 'http';
-import colors from 'colors';
-import fs from 'fs';
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
+import Http from 'http';
+import Colors from 'colors';
+import FileSystem from 'fs';
+import BodyParser from 'body-parser';
+import Morgan from 'morgan';
+import { Server } from 'https';
 
 class Runtime {
 	private static commandOptions: any;
-	private static server;
+	private static server: Http.Server | Server;
 	private static express: Express.Express;
-	private static socketIO;
-	private static socketIOEvents: { connect: (socket: SocketIO.Socket) => Promise<void>, disconnect: (socket: SocketIO.Socket) => Promise<void>, events: any };
+	private static socketIO: SocketIO.Server;
+	private static socketIOEvents: { connect: (_socket: SocketIO.Socket)=> Promise<void>, disconnect: (_socket: SocketIO.Socket)=> Promise<void>, events: any };
 
-	public static async boot() {
+	public static async boot(): Promise<void> {
 		try {
-			console.log(colors.green('=== Runtime ==='));
+			console.log(Colors.green('=== Runtime ==='));
 			Runtime.loadCommandOptions();
 			Runtime.checkCommandOptions();
 			Runtime.loadEnvironment();
@@ -28,7 +31,7 @@ class Runtime {
 	}
 
 	private static loadCommandOptions(): void {
-		const commandLineArgs = require('command-line-args');
+		const commandLineArgs: any = require('command-line-args');
 		Runtime.commandOptions = commandLineArgs([
 			{ name: 'env', alias: 'e', type: String }
 		]);
@@ -43,7 +46,7 @@ class Runtime {
 			Runtime.kill('ERROR: --env 인자가 누락됨');
 		}
 
-		if (fs.existsSync(process.cwd() + '/config/' + Runtime.commandOptions.env + '.env') === false) {
+		if (FileSystem.existsSync(process.cwd() + '/config/' + Runtime.commandOptions.env + '.env') === false) {
 			Runtime.kill('ERROR: 존재하지 않는 env를 불러오려 시도함');
 		}
 	}
@@ -53,22 +56,22 @@ class Runtime {
 	}
 
 	public static kill(message: string): void {
-		console.log(colors.red(message));
+		console.log(Colors.red(message));
 		process.exit(0);
 	}
 
 	private static createHTTPServer(): void {
-		Runtime.server = http.createServer(Runtime.express);
+		Runtime.server = Http.createServer(Runtime.express);
 		console.log('[HTTP] created');
 	}
 
 	private static createExpress(): void {
 		Runtime.express = Express();
-		Runtime.addMiddleware(bodyParser.urlencoded({ extended: false }));
-		Runtime.addMiddleware(bodyParser.json());
+		Runtime.addMiddleware(BodyParser.urlencoded({ extended: false }));
+		Runtime.addMiddleware(BodyParser.json());
 
 		if (process.env.DEBUG === 'true') {
-			Runtime.addMiddleware(morgan('dev'));
+			Runtime.addMiddleware(Morgan('dev'));
 		}
 
 		console.log('[Express] created');
@@ -77,15 +80,15 @@ class Runtime {
 	private static createSocketIO(): void {
 		Runtime.socketIO = SocketIO.listen(Runtime.server, { perMessageDeflate: false, pingInterval: 25000, pingTimeout: 60000 });
 		Runtime.socketIOEvents = {
-			connect: async () => { },
-			disconnect: async () => { },
+			connect: async function(): Promise<void> { },
+			disconnect: async function(): Promise<void> { },
 			events: {}
 		};
-		Runtime.socketIO.on('connection', (socket) => {
+		Runtime.socketIO.on('connection', (socket: SocketIO.Socket) => {
 			Runtime.socketIOEvents.connect(socket);
 
 			for (let eventName in Runtime.socketIOEvents.events) {
-				socket.on(eventName, (data) => {
+				socket.on(eventName, (data: any) => {
 					Runtime.socketIOEvents.events[eventName](socket, data);
 				});
 			}
@@ -98,6 +101,7 @@ class Runtime {
 	}
 
 	public static async open(): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/typedef
 		return new Promise((resolve, _reject) => {
 			Runtime.server.listen(Number(process.env.PORT), () => {
 				console.log('[HTTP] service is open on', process.env.PORT);
@@ -108,11 +112,11 @@ class Runtime {
 	}
 
 	/** Express Feature */
-	public static get(address: string, func: (req: Express.Request, res: Express.Response) => Promise<void>): void {
+	public static get(address: string, func: (_req: Express.Request, _res: Express.Response)=> Promise<void>): void {
 		Runtime.express.get(address, func);
 	}
 
-	public static post(address: string, func: (req: Express.Request, res: Express.Response) => Promise<void>): void {
+	public static post(address: string, func: (_req: Express.Request, _res: Express.Response)=> Promise<void>): void {
 		Runtime.express.post(address, func);
 	}
 
@@ -124,20 +128,20 @@ class Runtime {
 		return Express.Router();
 	}
 
-	public static setRouter(address: string, router: Express.Router) {
+	public static setRouter(address: string, router: Express.Router): void {
 		Runtime.express.use(address, router);
 	}
 
 	/** WebSocket Feature */
-	public static connect(callback: (socket: SocketIO.Socket) => Promise<void>): void {
+	public static connect(callback: (_socket: SocketIO.Socket)=> Promise<void>): void {
 		Runtime.socketIOEvents.connect = callback;
 	}
 
-	public static disconnect(callback: (socket: SocketIO.Socket) => Promise<void>): void {
+	public static disconnect(callback: (_socket: SocketIO.Socket)=> Promise<void>): void {
 		Runtime.socketIOEvents.disconnect = callback;
 	}
 
-	public static receive(eventName: string, callback: (socket: SocketIO.Socket, data: any) => Promise<void>): void {
+	public static receive(eventName: string, callback: (_socket: SocketIO.Socket, _data: any)=> Promise<void>): void {
 		Runtime.socketIOEvents.events[eventName] = callback;
 	}
 }
