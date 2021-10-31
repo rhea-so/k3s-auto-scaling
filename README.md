@@ -44,7 +44,7 @@ npm run coverage
 ### Artillery
 
 ```sh
-artillery quick --duration 60 --rate 10 -n 20 http://192.168.0.36:3000/test.html
+artillery quick --duration 300 --rate 10 -n 20 http://192.168.0.36:3000/test.html
 ```
 
 오토스케일링이 어떻게 이루어지는지 대략적인 계산은 다음처럼 이뤄집니다.
