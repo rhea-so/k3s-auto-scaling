@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+    name: tinychat-hpa
+    labels:
+        app: tinychat-hpa
+spec:
+    minReplicas: 1
+    maxReplicas: 10
+
+    # Scale 할 조건
+    metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 70
+      type: Resource
+
+    # Scale 할 ReplicaSet 설정
+    scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: tinychat
