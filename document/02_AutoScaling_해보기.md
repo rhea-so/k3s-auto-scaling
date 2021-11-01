@@ -83,7 +83,7 @@ kubectl get hpa
 
 HPA를 조회했을때 나오는 값들의 설명은 아래와 같습니다.
 
-* TARGETS(~%/~%): 대상 Deployment의 총 사용량 / AutoScaling을 할 사용량
+* TARGETS(\~%/\~%): 대상 Deployment의 총 사용량 / AutoScaling을 할 사용량
   * 예) 50% / 40% 인 경우 Pod를 1개 생성합니다.
   * 예) 50% / 20% 인 경우 Pod를 2개 생성합니다.
   * TARGETS 정보는 Metrics Server로부터 가져옵니다.
